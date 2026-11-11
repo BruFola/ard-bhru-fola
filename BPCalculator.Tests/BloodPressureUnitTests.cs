@@ -1,13 +1,49 @@
 ﻿namespace BPCalculator.Tests;
 
 using System.ComponentModel.DataAnnotations;
+using BPCalculator.Pages;
+
 
 public class BloodPressureUnitTests
 {
 
-    //Systolic and Diastolic values are validated using the Range attribute in the BloodPressure class. The following test cases check for valid and invalid values.
+[Fact]
+public void BloodPressure_DiastolicGreaterThanSystolic_FailValidation()
+
+    {
+        // Arrange
+        var model = new BloodPressureModel();
+        model.BP = new BloodPressure { Systolic = 80, Diastolic = 90 };
+
+        // Act
+      model.OnPost();
+
+        // Assert
+        Assert.False(model.ModelState.IsValid);
+        var entry = model.ModelState[""];
+        Assert.NotNull(entry);
+        var errorMessages = entry.Errors.Select(e => e.ErrorMessage).ToList();
+        Assert.Contains("Systolic must be greater than Diastolic", errorMessages);
+    }
+
+[Fact]
+public void BloodPressure_SystolicGreaterThanDiastolic_PassValidation()
+    {
+        // Arrange
+        var model = new BloodPressureModel();
+        model.BP = new BloodPressure { Systolic = 120, Diastolic = 80 };
+
+        // Act
+        
+
+        // Assert
+        Assert.True(model.ModelState.IsValid);
+    }
+
+
+
     [Fact]
-    public void BloodPressure_ValidSystolicValue_ShouldNotThrowValidationException()
+    public void BloodPressure_ValidSystolicValue_ShouldPassValidation()
     {
         // Arrange
         var ardbhru = new BloodPressure
@@ -25,7 +61,7 @@ public class BloodPressureUnitTests
     }
 
 [Fact]
-    public void BloodPressure_InvalidSystolicValue_ShouldThrowValidationException()
+    public void BloodPressure_InvalidSystolicValue_ShouldFailValidation()
     {
         // Arrange
         var ardbhru = new BloodPressure
@@ -45,7 +81,7 @@ public class BloodPressureUnitTests
     }
 
     [Fact]
-    public void BloodPressure_ValidDiastolicValue_ShouldNotThrowValidationException()
+    public void BloodPressure_ValidDiastolicValue_ShouldPassValidation()
     {
         // Arrange
         var ardbhru = new BloodPressure
@@ -63,7 +99,7 @@ public class BloodPressureUnitTests
     }
 
 [Fact]
-    public void BloodPressure_InvalidDiastolicValue_ShouldThrowValidationException()
+    public void BloodPressure_InvalidDiastolicValue_ShouldFailValidation()
     {
         // Arrange
         var ardbhru = new BloodPressure
@@ -106,6 +142,7 @@ public class BloodPressureUnitTests
     [InlineData(119, 79, BPCategory.Ideal)]   
     [InlineData(85, 70, BPCategory.Ideal)]    // bug - should it be if either is below the threshold then it should be low ?
     [InlineData(89, 59, BPCategory.Low)]
+    [InlineData(90, 40, BPCategory.Ideal)]
     
     public void Whatisthebloodpressurecategory_batch(int sys, int dia, BPCategory expectedCategory)
     {
