@@ -7,7 +7,26 @@ using BPCalculator.Pages;
 public class BloodPressureUnitTests
 {
 
+
 [Fact]
+// test the default values for Systolic and Diastolic using OnGet ( improve code coverage)
+public void BloodPressure_DefaultValues_passValidation()
+    {
+        // Arrange
+        var model = new BloodPressureModel();
+        
+        
+        // Act
+        model.OnGet();
+        var systolic = model.BP.Systolic;
+        var diastolic = model.BP.Diastolic;
+
+        // Assert
+        Assert.Equal(100,model.BP.Systolic); 
+        Assert.Equal(60, model.BP.Diastolic);
+    }
+[Fact]
+
 public void BloodPressure_DiastolicGreaterThanSystolic_FailValidation()
 
     {
@@ -34,7 +53,7 @@ public void BloodPressure_SystolicGreaterThanDiastolic_PassValidation()
         model.BP = new BloodPressure { Systolic = 120, Diastolic = 80 };
 
         // Act
-        
+        model.OnPost();
 
         // Assert
         Assert.True(model.ModelState.IsValid);
