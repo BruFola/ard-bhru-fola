@@ -1,12 +1,26 @@
 ﻿namespace BPCalculator.Tests;
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging.Abstractions;
 using BPCalculator.Pages;
 
 
 public class BloodPressureUnitTests
 {
 
+[Fact]
+public void PrivacyModel_OnGet_ReturnsPageResult()
+{
+    // Arrange
+var pageModel = new PrivacyModel(NullLogger<PrivacyModel>.Instance);
+
+    // Act
+    pageModel.OnGet();
+
+
+    // Assert
+   
+}
 
 [Fact]
 // test the default values for Systolic and Diastolic using OnGet ( improve code coverage)
