@@ -48,11 +48,12 @@ namespace BPCalculator
                 {
                     return BPCategory.Ideal;
                 }
-                else // both below ideal limts  90 Sustolic and 60 Diastolic
+                else
+                
                 {
                     return BPCategory.Low;
                 }
-
+            
                 
         
             }
