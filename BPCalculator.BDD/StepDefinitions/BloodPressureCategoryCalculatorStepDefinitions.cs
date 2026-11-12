@@ -1,27 +1,45 @@
-using System;
 using Reqnroll;
+using System;
 
 namespace BPCalculator.BDD.StepDefinitions
 {
     [Binding]
     public class BloodPressureCategoryCalculatorStepDefinitions
     {
+
+        private BloodPressure bp = null!; // tell compiler that this will be initialized before use - ignore warning.
+        private BPCategory results;
+
+
+        
+
+
         [Given("a systolic reading of {int} and a diastolic reading of {int}")]
-        public void GivenASystolicReadingOfAndADiastolicReadingOf(int p0, int p1)
+        public void GivenASystolicReadingOfAndADiastolicReadingOf(int sys, int dia)
         {
-            throw new PendingStepException();
+
+           bp = new BloodPressure { Systolic = sys, Diastolic = dia };
+
         }
 
         [When("I calculate the blood pressure category")]
         public void WhenICalculateTheBloodPressureCategory()
         {
-            throw new PendingStepException();
+
+            results = bp.Category;
+           
         }
 
         [Then("the result should be {string}")]
-        public void ThenTheResultShouldBe(string ideal)
+        public void ThenTheResultShouldBe(string expectedCat)
         {
-            throw new PendingStepException();
+
+          
+           Assert.Equal(expectedCat, results.ToString());
+
+
+
+
         }
 
     }
