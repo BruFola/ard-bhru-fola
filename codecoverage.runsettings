@@ -5,8 +5,8 @@
 			<DataCollector friendlyName ="XPlat Code Coverage">
 				<Configuration>
 
-					<!--<Exclude> [*]BPCalculator.Program,[*]BPCalculator.Startup</Exclude> 
-					<ExcludeByFile>**/*.cshtml,**/Error.cshtml.cs</ExcludeByFile> -->
+					--<Exclude> [*]BPCalculator.Program,[*]BPCalculator.Startup</Exclude> 
+					<ExcludeByFile>**/*.cshtml,**/Error.cshtml.cs</ExcludeByFile> 
 
 </Configuration>
 			 </DataCollector>
