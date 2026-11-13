@@ -9,9 +9,7 @@ on:
       - master
 
   workflow_dispatch:
-    braches:
-      - master
-      - /feature\/.*/ # Matches any branch that starts with "feature/"
+
 
 jobs:
   build-and-test:
