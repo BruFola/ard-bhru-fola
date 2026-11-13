@@ -16,3 +16,8 @@ Scenario Outline: What is the blood pressure category for a given systolic and d
   | 90       | 60        | Ideal  |
   | 80       | 59        | Low  |
   | 130      | 60        | PreHigh  |
+  | 139      | 89        | PreHigh |
+  | 190      | 89        | High    |
+   | 119     | 61        | Ideal    |
+   | 40      | 59        | Low      |
+  
