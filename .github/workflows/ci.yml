@@ -27,8 +27,11 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: Security Check for DotNet Dependencies
-        run: dotnet list package --vulnerable --include-transitive 2>&1 | tee build.log
-             grep -q -i "critical\|high\|moderate\|low" build.log; [ $? -eq 0 ] && echo "Security Vulnerabilities found on the log output" && exit 1
+        run: |
+              dotnet list package --vulnerable --include-transitive 2>&1 | tee build.log
+              if grep -q "has the following vulnerable packages" build.log; then
+                 echo "Security Vulnerabilities found on the log output" && exit 1
+              fi 
 
 
       - name: Run tests with code coverage
