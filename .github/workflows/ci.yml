@@ -40,8 +40,7 @@ jobs:
       - name: Sonar Scanner Start
         run: |
                dotnet tool install --global dotnet-sonarscanner
-               dotnet sonarscanner begin
-               /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.organization="ard-bhru-fola" /d:sonar.projectKey="BruFola_ard-bhru-fola" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+               dotnet sonarscanner begin /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /o="ard-bhru-fola" /k="BruFola_ard-bhru-fola" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
         
       - name: Restore dependencies
         run: dotnet restore
