@@ -8,7 +8,24 @@ on:
     branches:
       - master
 
+  workflow_dispatch:
+
+
+   
 jobs:
+ 
+  dependency-review:
+    if: github.event_name == 'pull_request'  
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v6
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with: 
+          fail-on-severity: high
+
+
   build-and-test:
     runs-on: ubuntu-latest
     steps:
@@ -22,6 +39,14 @@ jobs:
 
       - name: Build Solution
         run: dotnet build --no-restore --configuration Release
+
+      - name: Security Check for DotNet Dependencies
+        run: |
+              dotnet list package --vulnerable --include-transitive 2>&1 | tee build.log
+              if grep -q "has the following vulnerable packages" build.log; then
+                 echo "Security Vulnerabilities found on the log output" && exit 1
+              fi 
+
 
       - name: Run tests with code coverage
         run:  dotnet test --no-build --configuration Release --settings codecoverage.runsettings --collect:"XPlat Code Coverage"
