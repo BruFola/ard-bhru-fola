@@ -69,7 +69,7 @@ jobs:
              
 
       - name: Code Coverage Report with thresold set to 80 to fail if below 
-        uses: irongut/CodeCoverageSummary@v1.3.0
+        uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 # v1.3.0 - sonar cloud alert - replace tag with SHA .
         with:
          filename: /BPCalculator.Tests/**/coverage.cobertura.xml
          badge: true
