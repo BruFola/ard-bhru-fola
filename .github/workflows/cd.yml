@@ -1,0 +1,53 @@
+# This workflow is triggered on push to master 
+name: Continous Deployment to Azure Web App Workflow
+
+on:
+  push:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  AZURE_WEBAPP_NAME: ardbhrufola  # The Apps name
+
+ 
+  
+jobs:
+  Build-and-Publish-Deploy:
+   
+    name: Deploy trusted push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+  
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v4
+       
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+           dotnet-version: '10.0.x'
+
+      - name: Publish
+      
+        run: |
+          dotnet publish: BPCalculator/BPCalculator.csproj --configuration Release --output ./publish
+           
+
+      - name: 'Deploy to Azure WebApp'
+        uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383  # latest version of the action https://github.com/Azure/webapps-deploy/commit/02a81bead70021f5284939794bcec79c271ab383
+        with:
+         app-name: ${{ env.AZURE_WEBAPP_NAME }} 
+         publish-profile: ${{secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+         package: './publish' 
+
+
+
+   
+
+
