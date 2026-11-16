@@ -35,8 +35,7 @@ jobs:
 
       - name: Publish
       
-        run: |
-          dotnet publish: BPCalculator/BPCalculator.csproj --configuration Release --output ./publish
+        run: dotnet publish BPCalculator/BPCalculator.csproj --configuration Release --output ./publish # publish only the BP Calculator project to the publish folder
            
 
       - name: 'Deploy to Azure WebApp'
