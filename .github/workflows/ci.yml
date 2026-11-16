@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout Repository'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
         with: 
@@ -30,10 +30,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
+
+      - name: Sonar Scanner Start
+        env:
+          SONAR_TOKEN_SECRET: ${{ secrets.SONAR_TOKEN }}
+        run: |
+               dotnet tool install --global dotnet-sonarscanner
+               dotnet sonarscanner begin /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="$SONAR_TOKEN_SECRET" /o:"brufola" /k:"BruFola_ard-bhru-fola" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+        
       - name: Restore dependencies
         run: dotnet restore
 
@@ -51,8 +61,15 @@ jobs:
       - name: Run tests with code coverage
         run:  dotnet test --no-build --configuration Release --settings codecoverage.runsettings --collect:"XPlat Code Coverage"
 
+      - name: Sonar Scanner End
+        env:
+          SONAR_TOKEN_SECRET: ${{ secrets.SONAR_TOKEN }}
+        run: |
+             dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN_SECRET"
+             
+
       - name: Code Coverage Report with thresold set to 80 to fail if below 
-        uses: irongut/CodeCoverageSummary@v1.3.0
+        uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 # v1.3.0 - sonar cloud alert - replace tag with SHA .
         with:
          filename: /BPCalculator.Tests/**/coverage.cobertura.xml
          badge: true
