@@ -1,9 +1,12 @@
-# This workflow is triggered on push to master 
-name: Continous Deployment to Azure Web App Workflow
+# This workflow runs when CI passes on master, or manually
+name: Continuous Deployment to Azure Web App Workflow
 
-on:
-  push:
-    branches:
+on: 
+
+  workflow_run:
+     workflows: ["CI for Ard Bhru Fola"]
+     types: [completed] 
+     branches:
       - master
 
   workflow_dispatch:
@@ -17,16 +20,21 @@ env:
  
   
 jobs:
-  Build-and-Publish-Deploy:
+
+    
+     Build-and-Publish-Deploy:
    
-    name: Deploy trusted push
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
+    
+      runs-on: ubuntu-latest
+      if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'  # only run if the CI workflow was successful or if manually triggered
+      permissions:
+       contents: read
+      steps:
   
       - name: 'Checkout Repository'
         uses: actions/checkout@v4
+        with: 
+           ref: ${{ github.event.workflow_run.head_sha }}
        
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -39,14 +47,11 @@ jobs:
            
 
       - name: 'Deploy to Azure WebApp'
-        uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383  # latest version of the action https://github.com/Azure/webapps-deploy/commit/02a81bead70021f5284939794bcec79c271ab383
+        uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383  # v3.0.8 https://github.com/Azure/webapps-deploy/commit/02a81bead70021f5284939794bcec79c271ab383
         with:
          app-name: ${{ env.AZURE_WEBAPP_NAME }} 
          publish-profile: ${{secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
          package: './publish' 
 
 
-
-   
-
-
+        
