@@ -1,7 +1,7 @@
 param location string = resourceGroup().location
 param appName string = 'ardbhrufola'
 param planName string = 'ASP-Silo-bfa5'
-param planSku string = 'F1'
+param planSku string = 'S1' /// changing to S1 from F1to enable slots
 
 resource plan 'Microsoft.Web/serverfarms@2025-03-01' = {
 
@@ -13,6 +13,28 @@ resource plan 'Microsoft.Web/serverfarms@2025-03-01' = {
   kind: 'linux'
   properties: {
     reserved: true
+  }
+}
+
+  resource qaSlot 'Microsoft.Web/sites/slots@2025-03-01' = {
+  parent: webApp
+  name: 'quality'
+  location: location
+  properties: {
+    serverFarmId: plan.id
+    httpsOnly: true
+    siteConfig: {linuxFxVersion: 'DOTNETCORE|10.0'}
+  }
+}
+
+resource stgSlot 'Microsoft.Web/sites/slots@2025-03-01' = {
+  parent: webApp
+  name: 'staging'
+  location: location
+  properties: {
+    serverFarmId: plan.id
+    httpsOnly: true
+    siteConfig: {linuxFxVersion: 'DOTNETCORE|10.0'}
   }
 }
 
@@ -34,3 +56,6 @@ resource webApp 'Microsoft.Web/sites@2025-03-01' =  {
     siteConfig: {linuxFxVersion: 'DOTNETCORE|10.0'}
   }
 }
+
+
+
