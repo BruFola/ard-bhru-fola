@@ -16,9 +16,18 @@ resource plan 'Microsoft.Web/serverfarms@2025-03-01' = {
   }
 }
 
-resource webApp 'Microsoft.Web/sites@2025-03-01' = {
+resource appInsights 'Microsoft.Insights/components@2020-02-02'  existing = {
+  name: 'ardbhrufola'
+
+}
+
+resource webApp 'Microsoft.Web/sites@2025-03-01' =  {
   name: appName
   location: location 
+  tags: {
+    'hidden-link: /app-insights-resource-id': appInsights.id
+  
+  }
   properties: {
     serverFarmId: plan.id
     httpsOnly: true
