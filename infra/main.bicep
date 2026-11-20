@@ -23,11 +23,20 @@ resource plan 'Microsoft.Web/serverfarms@2025-03-01' = {
   identity: {
     type: 'SystemAssigned'
   }
-  
-  properties: {
+
+   properties: {
     serverFarmId: plan.id
     httpsOnly: true
     siteConfig: {linuxFxVersion: 'DOTNETCORE|10.0'}
+  }
+}
+
+
+resource qaSlotScm 'Microsoft.Web/sites/slots/basicPublishingCredentialsPolicies@2025-03-01' = {
+  parent: qaSlot
+  name: 'scm'
+  properties: {
+    allow: true
   }
 }
 
@@ -44,6 +53,16 @@ resource stgSlot 'Microsoft.Web/sites/slots@2025-03-01' = {
     siteConfig: {linuxFxVersion: 'DOTNETCORE|10.0'}
   }
 }
+
+resource stgSlotScm 'Microsoft.Web/sites/slots/basicPublishingCredentialsPolicies@2025-03-01' = {
+  parent: stgSlot
+  name: 'scm'
+  properties: {
+    allow: true
+  }
+}
+
+
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02'  existing = {
   name: 'ardbhrufola'
@@ -66,6 +85,8 @@ resource webApp 'Microsoft.Web/sites@2025-03-01' =  {
     siteConfig: {linuxFxVersion: 'DOTNETCORE|10.0'}
   }
 }
+
+
 
 
 
