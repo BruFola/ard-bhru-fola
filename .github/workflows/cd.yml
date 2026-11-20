@@ -63,15 +63,34 @@ jobs:
           name: publish
           path: ./publish
 
-       - name : Deploy to Quality Slot
+       - name: Deploy to Quality Slot
          uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383  # v3.0.8 https://github.com/Azure/webapps-deploy/commit/02a81bead70021f5284939794bcec79c271ab383
-         with :
+         with:
           app-name :  ${{env.AZURE_WEBAPP_NAME }}
           slot-name : quality
           publish-profile: ${{secrets.AZURE_PUBLISH_PROFILE_QUALITY }}
           package: ./publish
 
-  
+     Deploy-Staging:
+         needs: Deploy-Quality
+         runs-on: ubuntu-latest
+         permissions:
+          contents: read
+         steps:
+         - name: Download Artifact
+           uses: actions/download-artifact@v8
+           with:
+            name: publish
+            path: ./publish
+
+         - name: Deploy to Staging Slot
+           uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383  # v3.0.8 https://github.com/Azure/webapps-deploy/commit/02a81bead70021f5284939794bcec79c271ab383
+           with:
+            app-name :  ${{env.AZURE_WEBAPP_NAME }}
+            slot-name : staging
+            publish-profile: ${{secrets.AZURE_PUBLISH_PROFILE_STAGING}}
+            package: ./publish
+   
       
                  
 
