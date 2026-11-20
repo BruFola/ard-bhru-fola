@@ -20,6 +20,10 @@ resource plan 'Microsoft.Web/serverfarms@2025-03-01' = {
   parent: webApp
   name: 'quality'
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
+  
   properties: {
     serverFarmId: plan.id
     httpsOnly: true
@@ -31,6 +35,9 @@ resource stgSlot 'Microsoft.Web/sites/slots@2025-03-01' = {
   parent: webApp
   name: 'staging'
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     serverFarmId: plan.id
     httpsOnly: true
@@ -46,6 +53,9 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02'  existing = {
 resource webApp 'Microsoft.Web/sites@2025-03-01' =  {
   name: appName
   location: location 
+  identity: {
+    type: 'SystemAssigned'
+  }
   tags: {
     'hidden-link: /app-insights-resource-id': appInsights.id
   
