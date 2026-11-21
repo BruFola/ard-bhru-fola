@@ -11,19 +11,18 @@ var appSettings = [
 ]
 
 resource plan 'Microsoft.Web/serverfarms@2025-03-01' = {
-
   name: planName
   location: location
   sku: {
     name: planSku
-  } 
+  }
   kind: 'linux'
   properties: {
     reserved: true
   }
 }
 
-  resource qaSlot 'Microsoft.Web/sites/slots@2025-03-01' = {
+resource qaSlot 'Microsoft.Web/sites/slots@2025-03-01' = {
   parent: webApp
   name: 'quality'
   location: location
@@ -31,7 +30,7 @@ resource plan 'Microsoft.Web/serverfarms@2025-03-01' = {
     type: 'SystemAssigned'
   }
 
-   properties: {
+  properties: {
     serverFarmId: plan.id
     httpsOnly: true
     siteConfig: {
@@ -40,8 +39,6 @@ resource plan 'Microsoft.Web/serverfarms@2025-03-01' = {
     }
   }
 }
-
-<<<<<<< Updated upstream
 
 resource qaSlotScm 'Microsoft.Web/sites/slots/basicPublishingCredentialsPolicies@2025-03-01' = {
   parent: qaSlot
@@ -52,9 +49,6 @@ resource qaSlotScm 'Microsoft.Web/sites/slots/basicPublishingCredentialsPolicies
 }
 
 resource stgSlot 'Microsoft.Web/sites/slots@2025-03-01' = {
-=======
-  resource stgSlot 'Microsoft.Web/sites/slots@2025-03-01' = {
->>>>>>> Stashed changes
   parent: webApp
   name: 'staging'
   location: location
@@ -67,11 +61,10 @@ resource stgSlot 'Microsoft.Web/sites/slots@2025-03-01' = {
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|10.0'
       appSettings: appSettings
-      }
+    }
   }
 }
 
-<<<<<<< Updated upstream
 resource stgSlotScm 'Microsoft.Web/sites/slots/basicPublishingCredentialsPolicies@2025-03-01' = {
   parent: stgSlot
   name: 'scm'
@@ -80,25 +73,18 @@ resource stgSlotScm 'Microsoft.Web/sites/slots/basicPublishingCredentialsPolicie
   }
 }
 
-
-
-resource appInsights 'Microsoft.Insights/components@2020-02-02'  existing = {
-=======
-  resource appInsights 'Microsoft.Insights/components@2020-02-02'  existing = {
->>>>>>> Stashed changes
+resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: 'ardbhrufola'
-
 }
 
-  resource webApp 'Microsoft.Web/sites@2025-03-01' =  {
+resource webApp 'Microsoft.Web/sites@2025-03-01' = {
   name: appName
-  location: location 
+  location: location
   identity: {
     type: 'SystemAssigned'
   }
   tags: {
     'hidden-link: /app-insights-resource-id': appInsights.id
-  
   }
   properties: {
     serverFarmId: plan.id
@@ -106,11 +92,6 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02'  existing = {
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|10.0'
       appSettings: appSettings
-      }
+    }
   }
 }
-
-
-
-
-
