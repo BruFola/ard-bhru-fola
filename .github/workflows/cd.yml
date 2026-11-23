@@ -33,12 +33,12 @@ jobs:
       steps:
   
       - name: 'Checkout Repository'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Part of Github - no need for pinning 
         with: 
            ref: ${{ github.event.workflow_run.head_sha }}
        
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v4 # Part of Github - no need for pinning 
         with:
            dotnet-version: '10.0.x'
 
@@ -46,7 +46,7 @@ jobs:
         run:  dotnet publish BPCalculator/BPCalculator.csproj --configuration Release --output ./publish # publish only the BP Calculator project to the publish folder
       
       - name: Upload Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # V7.0.2  https://github.com/actions/upload-artifact/commit/cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
          name: publish
          path: ./publish
@@ -58,7 +58,7 @@ jobs:
         contents: read
       steps:
        - name: Download Artifact
-         uses: actions/download-artifact@v8
+         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # V8.0.2 https://github.com/actions/download-artifact/commit/9000827ccba6bdab643e8b6fd33ac0654aef8333
          with:
           name: publish
           path: ./publish
@@ -78,7 +78,7 @@ jobs:
           contents: read
          steps:
          - name: Download Artifact
-           uses: actions/download-artifact@v8
+           uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # V8.0.2 https://github.com/actions/download-artifact/commit/9000827ccba6bdab643e8b6fd33ac0654aef8333
            with:
             name: publish
             path: ./publish
