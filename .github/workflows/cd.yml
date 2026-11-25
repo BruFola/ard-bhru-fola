@@ -71,8 +71,38 @@ jobs:
           publish-profile: ${{secrets.AZURE_PUBLISH_PROFILE_QUALITY }}
           package: ./publish
 
+
+     E2E-Testing:
+      permissions: 
+        contents: read
+      needs: Deploy-Quality
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: 'Checkout Repository'
+          uses: actions/checkout@v4 # Part of Github - no need for pinning 
+          with: 
+           ref: ${{ github.event.workflow_run.head_sha }}
+       
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v4 # Part of Github - no need for pinning 
+          with:
+           dotnet-version: '10.0.x'
+
+        - name: Build E2E Tests
+          run: dotnet build BPCalculator.E2E --configuration Release
+
+        - name: Install Playwright browsers
+          run: pwsh BPCalculator.E2E/bin/Release/net10.0/playwright.ps1 install --with-deps chromium
+
+        - name: Run E2E tests against Quality
+          env:
+            BASE_URL: https://ardbhrufola-quality-e3hqe9bgevaxcgak.spaincentral-01.azurewebsites.net/
+          run: dotnet test BPCalculator.E2E --no-build --configuration Release
+
+
      Deploy-Staging:
-         needs: Deploy-Quality
+         needs: E2E-Testing
          runs-on: ubuntu-latest
          permissions:
           contents: read
