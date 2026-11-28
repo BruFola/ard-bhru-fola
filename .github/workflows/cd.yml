@@ -144,9 +144,31 @@ jobs:
               
               path: BPCalculator.Performance/Stress_Test.js
 
+     Security-Scan:
+          needs: [Deploy-Staging]
+          runs-on: ubuntu-latest
+          permissions:
+            contents: read 
+
+          env:
+            BASE_URL: https://ardbhrufola-staging-h8avesaehdgzh2ay.spaincentral-01.azurewebsites.net/
+
+          steps:
+          - name: 'Checkout Repository'
+            uses: actions/checkout@v4 # Part of Github - no need for pinning 
+            with: 
+             ref: ${{ github.event.workflow_run.head_sha }}
+
+          - name: run ZA Proxy 
+            uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25  # Version 0.15.0 https://github.com/zaproxy/action-baseline/commit/de8ad967d3548d44ef623df22cf95c3b0baf8b25
+            with:
+              target: ${{ env.BASE_URL }}
+              allow_issue_writing: false
+              fail_action: false
+
    
      Swap-Production:
-          needs: [Deploy-Staging, Performance-Testing]
+          needs: [Deploy-Staging, Performance-Testing, Security-Scan]
           environment: production
           runs-on: ubuntu-latest
           permissions:
