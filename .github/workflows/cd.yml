@@ -113,6 +113,7 @@ jobs:
             name: publish
             path: ./publish
 
+    
          - name: Deploy to Staging Slot
            uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383  # v3.0.8 https://github.com/Azure/webapps-deploy/commit/02a81bead70021f5284939794bcec79c271ab383
            with:
@@ -120,9 +121,32 @@ jobs:
             slot-name : staging
             publish-profile: ${{secrets.AZURE_PUBLISH_PROFILE_STAGING}}
             package: ./publish
+
+     Performance-Testing:
+          needs: Deploy-Staging
+          runs-on: ubuntu-latest
+          permissions:
+           contents: read
+          env:
+            BASE_URL: https://ardbhrufola-staging-h8avesaehdgzh2ay.spaincentral-01.azurewebsites.net/
+          steps:
+          - name: 'Checkout Repository'
+            uses: actions/checkout@v4 # Part of Github - no need for pinning 
+            with: 
+             ref: ${{ github.event.workflow_run.head_sha }}
+
+          - name: install K6
+            uses: grafana/setup-k6-action@c47136d33d365efbeb9ae7266908b5dcf98cdece # V1.3 https://github.com/grafana/setup-k6-action/commit/c47136d33d365efbeb9ae7266908b5dcf98cdece
+
+          - name: Run K6 Tests
+            uses: grafana/run-k6-action@54385d2a25c222a08b4a3aec6b653b8fb370a1ed # V1.6 https://github.com/grafana/run-k6-action/commit/54385d2a25c222a08b4a3aec6b653b8fb370a1ed
+            with: 
+              
+              path: BPCalculator.Performance/Stress_Test.js
+
    
      Swap-Production:
-          needs: Deploy-Staging
+          needs: [Deploy-Staging, Performance-Testing]
           environment: production
           runs-on: ubuntu-latest
           permissions:

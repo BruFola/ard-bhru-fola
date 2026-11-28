@@ -42,7 +42,7 @@ jobs:
           SONAR_TOKEN_SECRET: ${{ secrets.SONAR_TOKEN }}
         run: |
                dotnet tool install --global dotnet-sonarscanner
-               dotnet sonarscanner begin /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="$SONAR_TOKEN_SECRET" /o:"brufola" /k:"BruFola_ard-bhru-fola" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+               dotnet sonarscanner begin /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverage.exclusions="BPCalculator.Performance/**" /d:sonar.token="$SONAR_TOKEN_SECRET" /o:"brufola" /k:"BruFola_ard-bhru-fola" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
         
       - name: Restore dependencies
         run: dotnet restore
